@@ -122,6 +122,10 @@ func (psh *PersistentStatusHandler) SetInt64Value(key string, value int64) {
 
 // SetUInt64Value method - will update the value for a key
 func (psh *PersistentStatusHandler) SetUInt64Value(key string, value uint64) {
+	if key == common.MetricNonceAtEpochStart {
+		log.Debug("PersistentStatusHandler: saving MetricNonceAtEpochStart metric", "value", value)
+	}
+
 	valueFromMapI, ok := psh.persistentMetrics.Load(key)
 	if !ok {
 		return

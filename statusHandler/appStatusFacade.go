@@ -3,6 +3,7 @@ package statusHandler
 import (
 	"github.com/ElrondNetwork/elrond-go-core/core"
 	"github.com/ElrondNetwork/elrond-go-core/core/check"
+	"github.com/ElrondNetwork/elrond-go/common"
 )
 
 // AppStatusFacade will be used for handling multiple monitoring tools at once
@@ -60,6 +61,10 @@ func (asf *AppStatusFacade) SetInt64Value(key string, value int64) {
 
 // SetUInt64Value method - will update the value for a key for every handler
 func (asf *AppStatusFacade) SetUInt64Value(key string, value uint64) {
+	if key == common.MetricNonceAtEpochStart {
+		log.Debug("saving MetricNonceAtEpochStart metric", "value", value)
+	}
+
 	for _, ash := range asf.handlers {
 		ash.SetUInt64Value(key, value)
 	}

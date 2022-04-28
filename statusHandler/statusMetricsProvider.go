@@ -90,6 +90,10 @@ func (sm *statusMetrics) SetInt64Value(key string, value int64) {
 
 // SetUInt64Value method - sets an uint64 value for a key
 func (sm *statusMetrics) SetUInt64Value(key string, value uint64) {
+	if key == common.MetricNonceAtEpochStart {
+		log.Debug("statusMetrics: saving MetricNonceAtEpochStart metric", "value", value)
+	}
+
 	sm.mutUint64Operations.Lock()
 	defer sm.mutUint64Operations.Unlock()
 
