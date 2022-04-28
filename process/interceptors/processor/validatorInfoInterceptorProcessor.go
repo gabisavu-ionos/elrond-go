@@ -52,6 +52,8 @@ func (processor *validatorInfoInterceptorProcessor) Save(data process.Intercepte
 
 	processor.peerShardMapper.PutPeerIdShardId(fromConnectedPeer, shardValidatorInfo.ShardID())
 
+	log.Debug("testing---validatorInfoInterceptorProcessor.Save", "peerID", fromConnectedPeer.Pretty(), "shard", shardValidatorInfo.ShardID())
+
 	return nil
 }
 

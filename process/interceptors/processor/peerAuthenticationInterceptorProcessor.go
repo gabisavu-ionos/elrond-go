@@ -84,6 +84,8 @@ func (paip *peerAuthenticationInterceptorProcessor) Save(data process.Intercepte
 
 	paip.peerAuthenticationCacher.Put(fromConnectedPeer.Bytes(), interceptedPeerAuthenticationData.Message(), interceptedPeerAuthenticationData.SizeInBytes())
 
+	log.Debug("testing---peerAuthenticationInterceptorProcessor.Save", "peerID", fromConnectedPeer.Pretty(), "message size", interceptedPeerAuthenticationData.SizeInBytes())
+
 	return paip.updatePeerInfo(interceptedPeerAuthenticationData.Message())
 }
 
@@ -93,7 +95,11 @@ func (paip *peerAuthenticationInterceptorProcessor) updatePeerInfo(message inter
 		return process.ErrWrongTypeAssertion
 	}
 
-	paip.peerShardMapper.UpdatePeerIDPublicKeyPair(core.PeerID(peerAuthenticationData.GetPid()), peerAuthenticationData.GetPubkey())
+	pid := core.PeerID(peerAuthenticationData.GetPid())
+	pk := peerAuthenticationData.GetPubkey()
+	paip.peerShardMapper.UpdatePeerIDPublicKeyPair(pid, pk)
+
+	log.Debug("testing---peerAuthenticationInterceptorProcessor.updatePeerInfo", "peerID", pid.Pretty(), "pk", pk)
 
 	return nil
 }

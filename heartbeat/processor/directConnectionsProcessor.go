@@ -125,7 +125,7 @@ func (dcp *directConnectionsProcessor) notifyNewPeers(newPeers []core.PeerID) {
 	for _, newPeer := range newPeers {
 		errNotCritical := dcp.messenger.SendToConnectedPeer(common.ConnectionTopic, shardValidatorInfoBuff, newPeer)
 		if errNotCritical != nil {
-			log.Trace("directConnectionsProcessor.notifyNewPeers", "pid", newPeer.Pretty(), "error", errNotCritical)
+			log.Debug("testing---directConnectionsProcessor.notifyNewPeers", "pid", newPeer.Pretty(), "error", errNotCritical)
 			continue
 		}
 

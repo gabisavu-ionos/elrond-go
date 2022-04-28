@@ -171,6 +171,7 @@ func (res *peerAuthenticationResolver) ProcessReceivedMessage(message p2p.Messag
 
 // resolveChunkRequest sends the response for a chunk request
 func (res *peerAuthenticationResolver) resolveChunkRequest(chunkIndex int, epoch uint32, pid core.PeerID) error {
+	log.Debug("testing---resolveChunkRequest", "chunk", chunkIndex)
 	sortedPKs, err := res.getSortedValidatorsKeys(epoch)
 	if err != nil {
 		return err
@@ -229,6 +230,8 @@ func (res *peerAuthenticationResolver) extractChunk(dataBuff [][]byte, chunkInde
 
 // resolveMultipleHashesRequest sends the response for multiple hashes request
 func (res *peerAuthenticationResolver) resolveMultipleHashesRequest(hashesBuff []byte, pid core.PeerID) error {
+	log.Debug("testing---resolveMultipleHashesRequest", "num of hashes", len(hashesBuff), "max messages allowed", res.maxNumOfPeerAuthenticationInResponse)
+
 	b := batch.Batch{}
 	err := res.marshalizer.Unmarshal(&b, hashesBuff)
 	if err != nil {
@@ -246,6 +249,8 @@ func (res *peerAuthenticationResolver) resolveMultipleHashesRequest(hashesBuff [
 
 // sendPeerAuthsForHashes sends multiple peer authentication messages for specific hashes
 func (res *peerAuthenticationResolver) sendPeerAuthsForHashes(dataBuff [][]byte, hashesBuff []byte, pid core.PeerID) error {
+	log.Debug("testing---sendPeerAuthsForHashes", "count data buff", len(dataBuff), "max num in response", res.maxNumOfPeerAuthenticationInResponse)
+
 	if len(dataBuff) > res.maxNumOfPeerAuthenticationInResponse {
 		return res.sendLargeDataBuff(dataBuff, hashesBuff, res.maxNumOfPeerAuthenticationInResponse, pid)
 	}
@@ -286,6 +291,11 @@ func (res *peerAuthenticationResolver) sendData(dataSlice [][]byte, reference []
 		return err
 	}
 
+	log.Debug("testing---sending peer auth", "count", len(dataSlice))
+	for i := 0; i < len(dataSlice); i++ {
+		log.Debug("testing---sendData", "peer auth slice", string(dataSlice[i]))
+	}
+
 	return res.Send(buffToSend, pid)
 }
 
@@ -295,6 +305,7 @@ func (res *peerAuthenticationResolver) fetchPeerAuthenticationSlicesForPublicKey
 	for _, pk := range pks {
 		peerAuthForHash, _ := res.fetchPeerAuthenticationAsByteSlice(pk)
 		if peerAuthForHash != nil {
+			log.Debug("testing---fetchPeerAuthenticationSlicesForPublicKeys", "pk", string(pk), "peer auth bytes", string(peerAuthForHash))
 			peerAuths = append(peerAuths, peerAuthForHash)
 		}
 	}

@@ -66,6 +66,8 @@ func (hip *heartbeatInterceptorProcessor) Save(data process.InterceptedData, fro
 
 	hip.heartbeatCacher.Put(fromConnectedPeer.Bytes(), interceptedHeartbeat.Message(), interceptedHeartbeat.SizeInBytes())
 
+	log.Debug("testing---heartbeatInterceptorProcessor.Save", "peerID", fromConnectedPeer.Pretty(), "message size", interceptedHeartbeat.SizeInBytes())
+
 	return hip.updatePeerInfo(interceptedHeartbeat.Message(), fromConnectedPeer)
 }
 
@@ -77,6 +79,8 @@ func (hip *heartbeatInterceptorProcessor) updatePeerInfo(message interface{}, fr
 
 	hip.peerShardMapper.PutPeerIdShardId(fromConnectedPeer, hip.shardCoordinator.SelfId())
 	hip.peerShardMapper.PutPeerIdSubType(fromConnectedPeer, core.P2PPeerSubType(heartbeatData.GetPeerSubType()))
+
+	log.Debug("testing---heartbeatInterceptorProcessor.updatePeerInfo", "peerID", fromConnectedPeer.Pretty(), "shard", hip.shardCoordinator.SelfId())
 
 	return nil
 }

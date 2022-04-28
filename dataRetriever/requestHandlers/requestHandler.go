@@ -736,7 +736,7 @@ func (rrh *resolverRequestHandler) GetNumPeersToQuery(key string) (int, int, err
 
 // RequestPeerAuthenticationsChunk asks for a chunk of peer authentication messages from connected peers
 func (rrh *resolverRequestHandler) RequestPeerAuthenticationsChunk(destShardID uint32, chunkIndex uint32) {
-	log.Debug("requesting peer authentication messages from network",
+	log.Debug("testing---requesting peer authentication messages from network",
 		"topic", common.PeerAuthenticationTopic,
 		"shard", destShardID,
 		"chunk", chunkIndex,
@@ -745,7 +745,7 @@ func (rrh *resolverRequestHandler) RequestPeerAuthenticationsChunk(destShardID u
 
 	resolver, err := rrh.resolversFinder.MetaChainResolver(common.PeerAuthenticationTopic)
 	if err != nil {
-		log.Error("RequestPeerAuthenticationsChunk.CrossShardResolver",
+		log.Error("RequestPeerAuthenticationsChunk.MetaChainResolver",
 			"error", err.Error(),
 			"topic", common.PeerAuthenticationTopic,
 			"shard", destShardID,
@@ -775,14 +775,14 @@ func (rrh *resolverRequestHandler) RequestPeerAuthenticationsChunk(destShardID u
 
 // RequestPeerAuthenticationsByHashes asks for peer authentication messages from specific peers hashes
 func (rrh *resolverRequestHandler) RequestPeerAuthenticationsByHashes(destShardID uint32, hashes [][]byte) {
-	log.Debug("requesting peer authentication messages from network",
+	log.Debug("testing---requesting peer authentication messages from network",
 		"topic", common.PeerAuthenticationTopic,
 		"shard", destShardID,
 	)
 
 	resolver, err := rrh.resolversFinder.MetaChainResolver(common.PeerAuthenticationTopic)
 	if err != nil {
-		log.Error("RequestPeerAuthenticationsChunk.CrossShardResolver",
+		log.Error("RequestPeerAuthenticationsByHashes.MetaChainResolver",
 			"error", err.Error(),
 			"topic", common.PeerAuthenticationTopic,
 			"shard", destShardID,
@@ -798,7 +798,7 @@ func (rrh *resolverRequestHandler) RequestPeerAuthenticationsByHashes(destShardI
 
 	err = peerAuthResolver.RequestDataFromHashArray(hashes, rrh.epoch)
 	if err != nil {
-		log.Debug("RequestPeerAuthenticationsChunk.RequestDataFromChunk",
+		log.Debug("RequestPeerAuthenticationsByHashes.RequestDataFromHashArray",
 			"error", err.Error(),
 			"topic", common.PeerAuthenticationTopic,
 			"shard", destShardID,
