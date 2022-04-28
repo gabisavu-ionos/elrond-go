@@ -202,6 +202,10 @@ func (processor *peerAuthenticationRequestsProcessor) requestMissingKeys(sortedV
 		return
 	}
 
+	for i := 0; i < len(missingKeys); i++ {
+		log.Debug("testing--- requesting missing key", "key", string(missingKeys[i]))
+	}
+
 	processor.requestHandler.RequestPeerAuthenticationsByHashes(processor.shardId, missingKeys)
 }
 
