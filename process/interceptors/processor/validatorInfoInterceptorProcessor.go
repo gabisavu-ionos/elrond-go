@@ -38,6 +38,7 @@ func (processor *validatorInfoInterceptorProcessor) Validate(_ process.Intercept
 
 // Save will save the intercepted validator info into peer shard mapper
 func (processor *validatorInfoInterceptorProcessor) Save(data process.InterceptedData, fromConnectedPeer core.PeerID, _ string) error {
+	log.Debug("testing---validatorInfoInterceptorProcessor.Save")
 	shardValidatorInfo, ok := data.(shardProvider)
 	if !ok {
 		return process.ErrWrongTypeAssertion

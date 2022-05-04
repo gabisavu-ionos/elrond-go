@@ -128,7 +128,7 @@ func (dcp *directConnectionsProcessor) notifyNewPeers(newPeers []core.PeerID) {
 			log.Debug("testing---directConnectionsProcessor.notifyNewPeers", "pid", newPeer.Pretty(), "error", errNotCritical)
 			continue
 		}
-
+		log.Debug("testing---directConnectionsProcessor.notifyNewPeers", "pid", newPeer.Pretty())
 		dcp.notifiedPeersMap[newPeer] = struct{}{}
 	}
 }
