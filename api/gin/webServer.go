@@ -18,6 +18,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
+	dataDogTraceGin "gopkg.in/DataDog/dd-trace-go.v1/contrib/gin-gonic/gin"
 )
 
 var log = logger.GetOrCreate("api/gin")
@@ -92,6 +93,7 @@ func (ws *webServer) StartHttpServer() error {
 	}
 	engine = gin.Default()
 	engine.Use(cors.Default())
+	engine.Use(dataDogTraceGin.Middleware(""))
 
 	processors, err := ws.createMiddlewareLimiters()
 	if err != nil {

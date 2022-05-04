@@ -17,7 +17,7 @@ require (
 	github.com/beevik/ntp v0.3.0
 	github.com/btcsuite/btcd v0.22.0-beta
 	github.com/davecgh/go-spew v1.1.1
-	github.com/elastic/go-elasticsearch/v7 v7.12.0
+	github.com/elastic/go-elasticsearch/v7 v7.17.1
 	github.com/gin-contrib/cors v0.0.0-20190301062745-f9e10995c85a
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-gonic/gin v1.7.6
@@ -44,8 +44,9 @@ require (
 	github.com/syndtr/goleveldb v1.0.1-0.20190318030020-c3a204f8e965
 	github.com/urfave/cli v1.22.5
 	github.com/whyrusleeping/timecache v0.0.0-20160911033111-cfcb2f1abfee
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
-	golang.org/x/net v0.0.0-20210428140749-89ef3d95e781
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+	golang.org/x/net v0.0.0-20211020060615-d418f374d309
+	gopkg.in/DataDog/dd-trace-go.v1 v1.38.1
 	gopkg.in/go-playground/validator.v8 v8.18.2
 // test point 3 for custom profiler
 )
