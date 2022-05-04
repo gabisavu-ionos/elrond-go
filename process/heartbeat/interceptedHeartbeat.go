@@ -14,6 +14,8 @@ import (
 const uint32Size = 4
 const uint64Size = 8
 
+var log = logger.GetOrCreate("interceptedHeartbeat")
+
 // ArgBaseInterceptedHeartbeat is the base argument used for messages
 type ArgBaseInterceptedHeartbeat struct {
 	DataBuff    []byte
@@ -83,6 +85,7 @@ func createHeartbeat(marshalizer marshal.Marshalizer, buff []byte) (*heartbeat.H
 
 // CheckValidity will check the validity of the received peer heartbeat
 func (ihb *interceptedHeartbeat) CheckValidity() error {
+	log.Debug("testing---interceptedHeartbeat.CheckValidity")
 	err := verifyPropertyMinMaxLen(payloadProperty, ihb.heartbeat.Payload)
 	if err != nil {
 		return err
@@ -102,6 +105,8 @@ func (ihb *interceptedHeartbeat) CheckValidity() error {
 	if ihb.heartbeat.PeerSubType != uint32(core.RegularPeer) && ihb.heartbeat.PeerSubType != uint32(core.FullHistoryObserver) {
 		return process.ErrInvalidPeerSubType
 	}
+
+	log.Debug("testing---interceptedHeartbeat.CheckValidity - valid data")
 	return nil
 }
 

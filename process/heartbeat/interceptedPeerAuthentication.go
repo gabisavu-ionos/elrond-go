@@ -103,6 +103,7 @@ func createPeerAuthentication(marshalizer marshal.Marshalizer, buff []byte) (*he
 
 // CheckValidity checks the validity of the received peer authentication. This call won't trigger the signature validation.
 func (ipa *interceptedPeerAuthentication) CheckValidity() error {
+	log.Debug("testing---interceptedPeerAuthentication.CheckValidity")
 	// Verify properties len
 	err := verifyPropertyMinMaxLen(publicKeyProperty, ipa.peerAuthentication.Pubkey)
 	if err != nil {
@@ -151,6 +152,8 @@ func (ipa *interceptedPeerAuthentication) CheckValidity() error {
 	if err != nil {
 		return err
 	}
+
+	log.Debug("testing---interceptedPeerAuthentication.CheckValidity - valid data")
 
 	return nil
 }
