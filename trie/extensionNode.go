@@ -589,12 +589,18 @@ func (en *extensionNode) getChildren(db common.DBWriteCacher) ([]node, error) {
 	return nextNodes, nil
 }
 
-func (en *extensionNode) getNumNodes() common.NumNodesDTO {
+func (en *extensionNode) getNumNodes(db common.DBWriteCacher) common.NumNodesDTO {
 	if check.IfNil(en) {
 		return common.NumNodesDTO{}
 	}
 
-	childNumNodes := en.child.getNumNodes()
+	err := resolveIfCollapsed(en, 0, db)
+	if err != nil {
+		log.Error("could not resolve collapsed node", "error", err)
+		return common.NumNodesDTO{}
+	}
+
+	childNumNodes := en.child.getNumNodes(db)
 	childNumNodes.Extensions++
 	childNumNodes.MaxLevel++
 

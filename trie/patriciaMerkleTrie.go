@@ -590,7 +590,7 @@ func (tr *patriciaMerkleTrie) GetNumNodes() common.NumNodesDTO {
 		return common.NumNodesDTO{}
 	}
 
-	return n.getNumNodes()
+	return n.getNumNodes(tr.trieStorage)
 }
 
 // GetStorageManager returns the storage manager for the trie

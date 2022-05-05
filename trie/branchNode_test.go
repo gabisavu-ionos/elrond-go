@@ -1315,7 +1315,7 @@ func TestBranchNode_GetNumNodesNilSelfShouldErr(t *testing.T) {
 	t.Parallel()
 
 	var bn *branchNode
-	numNodes := bn.getNumNodes()
+	numNodes := bn.getNumNodes(&testscommon.MemDbMock{})
 
 	assert.Equal(t, common.NumNodesDTO{}, numNodes)
 }

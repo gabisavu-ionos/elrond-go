@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/ElrondNetwork/elrond-go/storage/leveldb"
 	"math"
 	"math/big"
 	"math/rand"
@@ -39,6 +40,7 @@ import (
 	trieMock "github.com/ElrondNetwork/elrond-go/testscommon/trie"
 	"github.com/ElrondNetwork/elrond-go/trie"
 	trieFactory "github.com/ElrondNetwork/elrond-go/trie/factory"
+	"github.com/ElrondNetwork/elrond-go/trie/hashesHolder"
 	vmcommon "github.com/ElrondNetwork/elrond-vm-common"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -2387,4 +2389,70 @@ func createAccountsDBTestSetup() *state.AccountsDB {
 	adb, _ := state.NewAccountsDB(argsAccountsDB)
 
 	return adb
+}
+
+func TestNumDataTrieNodesWithRealDB(t *testing.T) {
+	t.Skip("this should be run only when debugging the trie")
+
+	// parameters that need to be provided
+	dbPath := "path to db"
+	trieRootHash := "5969923dee061869be264c7110a8377f98edf513ad1228df8c96b8e582e4e152"
+	accountAddress := "000000000000000005002234aec5707705c9a9c209fa78c256c79e573a4b5483"
+	//-----------------------------
+
+	marshalizer := &testscommon.ProtobufMarshalizerMock{}
+	hasher := &testscommon.KeccakMock{}
+
+	generalCfg := config.TrieStorageManagerConfig{
+		PruningBufferLen:      1000,
+		SnapshotsBufferLen:    10,
+		SnapshotsGoroutineNum: 1,
+	}
+
+	persister, err := leveldb.NewSerialDB(dbPath, 1, 1000, 100)
+	args := trie.NewTrieStorageManagerArgs{
+		MainStorer:             persister,
+		CheckpointsStorer:      testscommon.NewSnapshotPruningStorerMock(),
+		Marshalizer:            marshalizer,
+		Hasher:                 hasher,
+		GeneralConfig:          generalCfg,
+		CheckpointHashesHolder: hashesHolder.NewCheckpointHashesHolder(10000000, testscommon.HashSize),
+		IdleProvider:           &testscommon.ProcessStatusHandlerStub{},
+	}
+	trieStorageManager, _ := trie.NewTrieStorageManager(args)
+	tr, _ := trie.NewTrie(trieStorageManager, marshalizer, hasher, 5)
+
+	rh, err := hex.DecodeString(trieRootHash)
+	assert.Nil(t, err)
+	latestTrie, _ := tr.Recreate(rh)
+	evictionWaitListSize := uint(100)
+	ewl, _ := evictionWaitingList.NewEvictionWaitingList(evictionWaitListSize, memorydb.New(), integrationTests.TestMarshalizer)
+	spm, _ := storagePruningManager.NewStoragePruningManager(ewl, 10)
+
+	argsAccountsDB := state.ArgsAccountsDB{
+		Trie:                  latestTrie,
+		Hasher:                hasher,
+		Marshaller:            marshalizer,
+		AccountFactory:        factory.NewAccountCreator(),
+		StoragePruningManager: spm,
+		ProcessingMode:        common.Normal,
+		ProcessStatusHandler:  &testscommon.ProcessStatusHandlerStub{},
+	}
+	adb, _ := state.NewAccountsDB(argsAccountsDB)
+
+	scAddr, _ := hex.DecodeString(accountAddress)
+	acc, err := adb.GetExistingAccount(scAddr)
+	assert.Nil(t, err)
+	userAcc, ok := acc.(state.UserAccountHandler)
+	assert.True(t, ok)
+	dataTrie := userAcc.DataTrie()
+
+	numNodes := dataTrie.GetNumNodes()
+	fmt.Println("trie nodes",
+		"total", numNodes.Branches+numNodes.Extensions+numNodes.Leaves,
+		"branches", numNodes.Branches,
+		"extensions", numNodes.Extensions,
+		"leaves", numNodes.Leaves,
+		"max level", numNodes.MaxLevel,
+	)
 }

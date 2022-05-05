@@ -984,7 +984,7 @@ func TestExtensionNode_GetNumNodesNilSelfShouldErr(t *testing.T) {
 	t.Parallel()
 
 	var en *extensionNode
-	numNodes := en.getNumNodes()
+	numNodes := en.getNumNodes(&testscommon.MemDbMock{})
 
 	assert.Equal(t, common.NumNodesDTO{}, numNodes)
 }

@@ -845,7 +845,7 @@ func (bn *branchNode) getAllHashes(db common.DBWriteCacher) ([][]byte, error) {
 	return hashes, nil
 }
 
-func (bn *branchNode) getNumNodes() common.NumNodesDTO {
+func (bn *branchNode) getNumNodes(db common.DBWriteCacher) common.NumNodesDTO {
 	if check.IfNil(bn) {
 		return common.NumNodesDTO{}
 	}
@@ -854,12 +854,18 @@ func (bn *branchNode) getNumNodes() common.NumNodesDTO {
 		Branches: 1,
 	}
 
-	for _, n := range bn.children {
-		if check.IfNil(n) {
+	for i := range bn.children {
+		err := resolveIfCollapsed(bn, byte(i), db)
+		if err != nil {
+			log.Error("could not resolve collapsed node", "error", err)
 			continue
 		}
 
-		childNumNodes := n.getNumNodes()
+		if check.IfNil(bn.children[i]) {
+			continue
+		}
+
+		childNumNodes := bn.children[i].getNumNodes(db)
 		currentNumNodes.Branches += childNumNodes.Branches
 		currentNumNodes.Leaves += childNumNodes.Leaves
 		currentNumNodes.Extensions += childNumNodes.Extensions
