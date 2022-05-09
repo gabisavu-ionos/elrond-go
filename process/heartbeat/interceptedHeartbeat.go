@@ -66,6 +66,7 @@ func checkBaseArg(arg ArgBaseInterceptedHeartbeat) error {
 	if check.IfNil(arg.Marshaller) {
 		return process.ErrNilMarshalizer
 	}
+	log.Debug("testing---ArgBaseInterceptedHeartbeat ok")
 	return nil
 }
 
@@ -73,21 +74,24 @@ func createHeartbeat(marshaller marshal.Marshalizer, buff []byte) (*heartbeat.He
 	hb := &heartbeat.HeartbeatV2{}
 	err := marshaller.Unmarshal(hb, buff)
 	if err != nil {
+		log.Debug("testing---createHeartbeat unmarshal hb failed")
 		return nil, nil, err
 	}
 	payload := &heartbeat.Payload{}
 	err = marshaller.Unmarshal(payload, hb.Payload)
 	if err != nil {
+		log.Debug("testing---createHeartbeat unmarshal payload failed")
 		return nil, nil, err
 	}
 
-	log.Trace("interceptedHeartbeat successfully created")
+	log.Debug("testing---interceptedHeartbeat successfully created")
 
 	return hb, payload, nil
 }
 
 // CheckValidity will check the validity of the received peer heartbeat
 func (ihb *interceptedHeartbeat) CheckValidity() error {
+	log.Debug("testing---interceptedHeartbeat CheckValidity")
 	err := verifyPropertyMinMaxLen(payloadProperty, ihb.heartbeat.Payload)
 	if err != nil {
 		return err
@@ -107,6 +111,8 @@ func (ihb *interceptedHeartbeat) CheckValidity() error {
 	if ihb.heartbeat.PeerSubType != uint32(core.RegularPeer) && ihb.heartbeat.PeerSubType != uint32(core.FullHistoryObserver) {
 		return process.ErrInvalidPeerSubType
 	}
+
+	log.Debug("testing---interceptedHeartbeat received valid data")
 
 	log.Trace("interceptedHeartbeat received valid data")
 

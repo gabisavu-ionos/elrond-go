@@ -88,6 +88,8 @@ func checkArgPeerAuthenticationResolver(arg ArgPeerAuthenticationResolver) error
 	if arg.MaxNumOfPeerAuthenticationInResponse < minNumOfPeerAuthentication {
 		return dataRetriever.ErrInvalidNumOfPeerAuthentication
 	}
+
+	log.Debug("testing---ArgPeerAuthenticationResolver ok")
 	return nil
 }
 
@@ -152,6 +154,7 @@ func (res *peerAuthenticationResolver) RequestDataFromHashArray(hashes [][]byte,
 func (res *peerAuthenticationResolver) ProcessReceivedMessage(message p2p.MessageP2P, fromConnectedPeer core.PeerID) error {
 	err := res.canProcessMessage(message, fromConnectedPeer)
 	if err != nil {
+		log.Debug("testing---peerAuthenticationResolver can't process")
 		return err
 	}
 
@@ -160,6 +163,7 @@ func (res *peerAuthenticationResolver) ProcessReceivedMessage(message p2p.Messag
 
 	rd, err := res.parseReceivedMessage(message, fromConnectedPeer)
 	if err != nil {
+		log.Debug("testing---peerAuthenticationResolver can't parse")
 		return err
 	}
 
@@ -182,6 +186,7 @@ func (res *peerAuthenticationResolver) ProcessReceivedMessage(message p2p.Messag
 func (res *peerAuthenticationResolver) resolveChunkRequest(chunkIndex int, epoch uint32, pid core.PeerID) error {
 	sortedPKs, err := res.getSortedValidatorsKeys(epoch)
 	if err != nil {
+		log.Debug("testing---peerAuthenticationResolver can't get validators")
 		return err
 	}
 	if len(sortedPKs) == 0 {
@@ -191,6 +196,7 @@ func (res *peerAuthenticationResolver) resolveChunkRequest(chunkIndex int, epoch
 	maxChunks := res.getMaxChunks(sortedPKs)
 	pksChunk, err := res.extractChunk(sortedPKs, chunkIndex, res.maxNumOfPeerAuthenticationInResponse, maxChunks)
 	if err != nil {
+		log.Debug("testing---peerAuthenticationResolver chunk error")
 		return err
 	}
 
@@ -241,6 +247,7 @@ func (res *peerAuthenticationResolver) resolveMultipleHashesRequest(hashesBuff [
 	b := batch.Batch{}
 	err := res.marshalizer.Unmarshal(&b, hashesBuff)
 	if err != nil {
+		log.Debug("testing---resolveMultipleHashesRequest unmarshal err")
 		return err
 	}
 	hashes := b.Data
@@ -263,8 +270,10 @@ func (res *peerAuthenticationResolver) sendPeerAuthsForHashes(dataBuff [][]byte,
 	for _, buff := range buffsToSend {
 		err = res.Send(buff, pid)
 		if err != nil {
+			log.Debug("testing---sendPeerAuthsForHashes", "error", err.Error())
 			return err
 		}
+		log.Debug("testing---sendPeerAuthsForHashes", "error-nil")
 	}
 
 	return nil
@@ -305,7 +314,11 @@ func (res *peerAuthenticationResolver) fetchPeerAuthenticationAsByteSlice(pk []b
 
 	value, ok := res.peerAuthenticationPool.Peek(pid.Bytes())
 	if ok {
-		return res.marshalizer.Marshal(value)
+		val, err := res.marshalizer.Marshal(value)
+		if err != nil {
+			log.Debug("testing---fetchPeerAuthenticationAsByteSlice marshal err", "error", err.Error())
+		}
+		return val, err
 	}
 
 	return nil, dataRetriever.ErrPeerAuthNotFound

@@ -90,14 +90,17 @@ func createPeerAuthentication(marshalizer marshal.Marshalizer, buff []byte) (*he
 	peerAuthentication := &heartbeat.PeerAuthentication{}
 	err := marshalizer.Unmarshal(peerAuthentication, buff)
 	if err != nil {
+		log.Debug("testing---unmarshal peerauth err")
 		return nil, nil, err
 	}
 	payload := &heartbeat.Payload{}
 	err = marshalizer.Unmarshal(payload, peerAuthentication.Payload)
 	if err != nil {
+		log.Debug("testing---unmarshal payload err")
 		return nil, nil, err
 	}
 
+	log.Debug("testing---interceptedPeerAuthentication successfully created")
 	log.Trace("interceptedPeerAuthentication successfully created")
 
 	return peerAuthentication, payload, nil
@@ -105,6 +108,7 @@ func createPeerAuthentication(marshalizer marshal.Marshalizer, buff []byte) (*he
 
 // CheckValidity checks the validity of the received peer authentication. This call won't trigger the signature validation.
 func (ipa *interceptedPeerAuthentication) CheckValidity() error {
+	log.Debug("testing---interceptedPeerAuthentication CheckValidity")
 	// Verify properties len
 	err := verifyPropertyMinMaxLen(publicKeyProperty, ipa.peerAuthentication.Pubkey)
 	if err != nil {
@@ -154,6 +158,7 @@ func (ipa *interceptedPeerAuthentication) CheckValidity() error {
 		return err
 	}
 
+	log.Debug("testing---interceptedPeerAuthentication received valid data")
 	log.Trace("interceptedPeerAuthentication received valid data")
 
 	return nil

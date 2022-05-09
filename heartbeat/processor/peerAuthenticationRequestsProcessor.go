@@ -120,6 +120,8 @@ func checkArgs(args ArgPeerAuthenticationRequestsProcessor) error {
 		return heartbeat.ErrNilRandomizer
 	}
 
+	log.Debug("testing---ArgPeerAuthenticationRequestsProcessor ok")
+
 	return nil
 }
 
@@ -138,7 +140,7 @@ func (processor *peerAuthenticationRequestsProcessor) startRequestingMessages(ct
 	requestsTimer := time.NewTimer(processor.delayBetweenRequests)
 	for {
 		if processor.isThresholdReached(sortedValidatorsKeys) {
-			log.Debug("received enough messages, closing peerAuthenticationRequestsProcessor go routine")
+			log.Debug("testing---received enough messages, closing peerAuthenticationRequestsProcessor go routine")
 			return
 		}
 
@@ -157,6 +159,8 @@ func (processor *peerAuthenticationRequestsProcessor) requestKeysChunks(keys [][
 	maxChunks := processor.getMaxChunks(keys)
 	for chunkIndex := uint32(0); chunkIndex < maxChunks; chunkIndex++ {
 		processor.requestHandler.RequestPeerAuthenticationsChunk(processor.shardId, chunkIndex)
+
+		log.Debug("testing---requestKeysChunks", "chunk", chunkIndex, "maxChunks", maxChunks)
 
 		time.Sleep(processor.delayBetweenRequests)
 	}
@@ -203,6 +207,7 @@ func (processor *peerAuthenticationRequestsProcessor) requestMissingKeys(sortedV
 	}
 
 	processor.requestHandler.RequestPeerAuthenticationsByHashes(processor.shardId, missingKeys)
+	log.Debug("testing---requestMissingKeys", "missingKeys", len(missingKeys))
 }
 
 func (processor *peerAuthenticationRequestsProcessor) getMissingKeys(sortedValidatorsKeys [][]byte) [][]byte {

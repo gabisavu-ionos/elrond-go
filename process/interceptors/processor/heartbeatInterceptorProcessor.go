@@ -48,6 +48,7 @@ func checkArgsHeartbeat(args ArgHeartbeatInterceptorProcessor) error {
 		return process.ErrNilPeerShardMapper
 	}
 
+	log.Debug("testing---ArgHeartbeatInterceptorProcessor ok")
 	return nil
 }
 
@@ -61,6 +62,7 @@ func (hip *heartbeatInterceptorProcessor) Validate(_ process.InterceptedData, _ 
 func (hip *heartbeatInterceptorProcessor) Save(data process.InterceptedData, fromConnectedPeer core.PeerID, _ string) error {
 	interceptedHeartbeat, ok := data.(interceptedHeartbeatMessageHandler)
 	if !ok {
+		log.Debug("testing---heartbeatInterceptorProcessor save wrong type assert")
 		return process.ErrWrongTypeAssertion
 	}
 
@@ -72,12 +74,14 @@ func (hip *heartbeatInterceptorProcessor) Save(data process.InterceptedData, fro
 func (hip *heartbeatInterceptorProcessor) updatePeerInfo(message interface{}, fromConnectedPeer core.PeerID) error {
 	heartbeatData, ok := message.(*heartbeat.HeartbeatV2)
 	if !ok {
+		log.Debug("testing---heartbeatInterceptorProcessor updatePeerInfo wrong type assert")
 		return process.ErrWrongTypeAssertion
 	}
 
 	hip.peerShardMapper.PutPeerIdShardId(fromConnectedPeer, hip.shardCoordinator.SelfId())
 	hip.peerShardMapper.PutPeerIdSubType(fromConnectedPeer, core.P2PPeerSubType(heartbeatData.GetPeerSubType()))
 
+	log.Debug("testing---Heartbeat message saved")
 	log.Trace("Heartbeat message saved")
 
 	return nil

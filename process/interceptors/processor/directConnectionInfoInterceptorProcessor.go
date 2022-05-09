@@ -42,11 +42,13 @@ func (processor *DirectConnectionInfoInterceptorProcessor) Validate(_ process.In
 func (processor *DirectConnectionInfoInterceptorProcessor) Save(data process.InterceptedData, fromConnectedPeer core.PeerID, _ string) error {
 	shardDirectConnectionInfo, ok := data.(shardProvider)
 	if !ok {
+		log.Debug("testing---DirectConnectionInfoInterceptorProcessor save wrong type assert")
 		return process.ErrWrongTypeAssertion
 	}
 
 	shardID, err := strconv.Atoi(shardDirectConnectionInfo.ShardID())
 	if err != nil {
+		log.Debug("testing---DirectConnectionInfoInterceptorProcessor save can't cast to string")
 		return err
 	}
 

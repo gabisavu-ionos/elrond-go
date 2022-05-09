@@ -53,6 +53,7 @@ func checkArgsPeerAuthentication(args ArgPeerAuthenticationInterceptorProcessor)
 	if check.IfNil(args.HardforkTrigger) {
 		return heartbeat.ErrNilHardforkTrigger
 	}
+	log.Debug("testing---ArgPeerAuthenticationInterceptorProcessor ok")
 
 	return nil
 }
@@ -67,6 +68,7 @@ func (paip *peerAuthenticationInterceptorProcessor) Validate(_ process.Intercept
 func (paip *peerAuthenticationInterceptorProcessor) Save(data process.InterceptedData, fromConnectedPeer core.PeerID, _ string) error {
 	interceptedPeerAuthenticationData, ok := data.(interceptedPeerAuthenticationMessageHandler)
 	if !ok {
+		log.Debug("testing---peerAuthenticationInterceptorProcessor save wrong type assertion")
 		return process.ErrWrongTypeAssertion
 	}
 
@@ -74,6 +76,7 @@ func (paip *peerAuthenticationInterceptorProcessor) Save(data process.Intercepte
 	payload := &heartbeat.Payload{}
 	err := paip.marshaller.Unmarshal(payload, payloadBuff)
 	if err != nil {
+		log.Debug("testing---peerAuthenticationInterceptorProcessor save unmarshal failed")
 		return err
 	}
 
@@ -90,11 +93,13 @@ func (paip *peerAuthenticationInterceptorProcessor) Save(data process.Intercepte
 func (paip *peerAuthenticationInterceptorProcessor) updatePeerInfo(message interface{}) error {
 	peerAuthenticationData, ok := message.(*heartbeat.PeerAuthentication)
 	if !ok {
+		log.Debug("testing---peerAuthenticationInterceptorProcessor updatePeerInfo cast failed")
 		return process.ErrWrongTypeAssertion
 	}
 
 	paip.peerShardMapper.UpdatePeerIDPublicKeyPair(core.PeerID(peerAuthenticationData.GetPid()), peerAuthenticationData.GetPubkey())
 
+	log.Debug("testing---PeerAuthentication message saved")
 	log.Trace("PeerAuthentication message saved")
 
 	return nil
