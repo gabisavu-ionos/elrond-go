@@ -121,7 +121,7 @@ func (sender *peerAuthenticationSender) Execute() {
 		duration = sender.hardforkTimeBetweenSends
 	}
 
-	log.Debug("peer authentication message sent", "is hardfork triggered", isHardforkTriggered, "next send will be in", duration)
+	log.Debug("testing---peer authentication message sent", "is hardfork triggered", isHardforkTriggered, "next send will be in", duration)
 }
 
 func (sender *peerAuthenticationSender) execute() (error, bool) {

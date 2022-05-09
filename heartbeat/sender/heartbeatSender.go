@@ -70,7 +70,7 @@ func (sender *heartbeatSender) Execute() {
 		duration = sender.timeBetweenSendsWhenError
 		log.Error("error sending heartbeat message", "error", err, "next send will be in", duration)
 	} else {
-		log.Debug("heartbeat message sent", "next send will be in", duration)
+		log.Debug("testing---heartbeat message sent", "next send will be in", duration)
 	}
 
 	sender.CreateNewTimer(duration)
