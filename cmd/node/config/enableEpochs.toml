@@ -206,6 +206,7 @@
     # MaxNodesChangeEnableEpoch holds configuration for changing the maximum number of nodes and the enabling epoch
     MaxNodesChangeEnableEpoch = [
         { EpochEnable = 0, MaxNumNodes = 56, NodesToShufflePerShard = 2 },
+	{ EpochEnable = 1, MaxNumNodes = 56, NodesToShufflePerShard = 2 },
         # Staking v4 configuration, where:
         # - Enable epoch = StakingV4DistributeAuctionToWaitingEpoch
         # - NodesToShufflePerShard = same as previous entry in MaxNodesChangeEnableEpoch
