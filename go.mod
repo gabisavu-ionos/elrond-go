@@ -18,7 +18,7 @@ require (
 	github.com/beevik/ntp v0.3.0
 	github.com/btcsuite/btcd v0.22.0-beta
 	github.com/davecgh/go-spew v1.1.1
-	github.com/elastic/go-elasticsearch/v7 v7.12.0
+	github.com/elastic/go-elasticsearch/v7 v7.17.1
 	github.com/gin-contrib/cors v0.0.0-20190301062745-f9e10995c85a
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-gonic/gin v1.7.6
@@ -44,6 +44,7 @@ require (
 	github.com/whyrusleeping/timecache v0.0.0-20160911033111-cfcb2f1abfee
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	golang.org/x/net v0.0.0-20220418201149-a630d4f3e7a2
+	gopkg.in/DataDog/dd-trace-go.v1 v1.38.1
 	gopkg.in/go-playground/validator.v8 v8.18.2
 // test point 3 for custom profiler
 )
