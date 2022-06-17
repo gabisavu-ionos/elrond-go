@@ -284,7 +284,10 @@ type StateComponentsHandler interface {
 type StateComponentsHolder interface {
 	PeerAccounts() state.AccountsAdapter
 	AccountsAdapter() state.AccountsAdapter
+	// TODO: remove AccountsAdapterAPI from interface and use the factory instead
 	AccountsAdapterAPI() state.AccountsAdapter
+	AccountsAdapterAPIFactory() AccountsAdapterAPIFactory
+	PeerAccountsAdapterAPIFactory() AccountsAdapterAPIFactory
 	TriesContainer() common.TriesHolder
 	TrieStorageManagers() map[string]common.StorageManager
 	IsInterfaceNil() bool
@@ -462,5 +465,10 @@ type EconomicsHandler interface {
 	GasPerDataByte() uint64
 	GasPriceModifier() float64
 	ComputeFeeForProcessing(tx data.TransactionWithFeeHandler, gasToUse uint64) *big.Int
+	IsInterfaceNil() bool
+}
+
+type AccountsAdapterAPIFactory interface {
+	Create() (state.AccountsAdapter, error)
 	IsInterfaceNil() bool
 }

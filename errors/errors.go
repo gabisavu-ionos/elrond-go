@@ -47,6 +47,9 @@ var ErrMultiSigHasherMissmatch = errors.New("wrong multisig hasher provided for 
 // ErrNilAccountsAdapter signals that a nil accounts adapter has been provided
 var ErrNilAccountsAdapter = errors.New("nil accounts adapter")
 
+// ErrNilAccountsAdapterAPIFactory signals that a nil accounts adapter API factory has been provided
+var ErrNilAccountsAdapterAPIFactory = errors.New("nil accounts adapter API factory")
+
 // ErrNilAccountsParser signals that a nil accounts parser has been provided
 var ErrNilAccountsParser = errors.New("nil accounts parser")
 
