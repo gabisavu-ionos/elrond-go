@@ -2,16 +2,19 @@ package mock
 
 import (
 	"github.com/ElrondNetwork/elrond-go/common"
+	"github.com/ElrondNetwork/elrond-go/factory"
 	"github.com/ElrondNetwork/elrond-go/state"
 )
 
 // StateComponentsHolderStub -
 type StateComponentsHolderStub struct {
-	PeerAccountsCalled        func() state.AccountsAdapter
-	AccountsAdapterCalled     func() state.AccountsAdapter
-	AccountsAdapterAPICalled  func() state.AccountsAdapter
-	TriesContainerCalled      func() common.TriesHolder
-	TrieStorageManagersCalled func() map[string]common.StorageManager
+	PeerAccountsCalled                  func() state.AccountsAdapter
+	AccountsAdapterCalled               func() state.AccountsAdapter
+	AccountsAdapterAPICalled            func() state.AccountsAdapter
+	TriesContainerCalled                func() common.TriesHolder
+	TrieStorageManagersCalled           func() map[string]common.StorageManager
+	AccountsAdapterAPIFactoryCalled     func() factory.AccountsAdapterAPIFactory
+	PeerAccountsAdapterAPIFactoryCalled func() factory.AccountsAdapterAPIFactory
 }
 
 // PeerAccounts -
@@ -36,6 +39,24 @@ func (s *StateComponentsHolderStub) AccountsAdapter() state.AccountsAdapter {
 func (s *StateComponentsHolderStub) AccountsAdapterAPI() state.AccountsAdapter {
 	if s.AccountsAdapterAPICalled != nil {
 		return s.AccountsAdapterAPICalled()
+	}
+
+	return nil
+}
+
+// AccountsAdapterAPIFactory -
+func (s *StateComponentsHolderStub) AccountsAdapterAPIFactory() factory.AccountsAdapterAPIFactory {
+	if s.AccountsAdapterAPIFactoryCalled != nil {
+		return s.AccountsAdapterAPIFactoryCalled()
+	}
+
+	return nil
+}
+
+// PeerAccountsAdapterAPIFactory -
+func (s *StateComponentsHolderStub) PeerAccountsAdapterAPIFactory() factory.AccountsAdapterAPIFactory {
+	if s.AccountsAdapterAPIFactoryCalled != nil {
+		return s.AccountsAdapterAPIFactoryCalled()
 	}
 
 	return nil

@@ -78,6 +78,9 @@ func (msc *managedStateComponents) CheckSubcomponents() error {
 	if check.IfNil(msc.accountsAdapter) {
 		return errors.ErrNilAccountsAdapter
 	}
+	if check.IfNil(msc.accountsAdapterAPIFactory) {
+		return errors.ErrNilAccountsAdapterAPIFactory
+	}
 	if check.IfNil(msc.triesContainer) {
 		return errors.ErrNilTriesContainer
 	}
@@ -115,6 +118,30 @@ func (msc *managedStateComponents) AccountsAdapter() state.AccountsAdapter {
 	}
 
 	return msc.stateComponents.accountsAdapter
+}
+
+// AccountsAdapterAPIFactory returns the accounts adapter api factory
+func (msc *managedStateComponents) AccountsAdapterAPIFactory() AccountsAdapterAPIFactory {
+	msc.mutStateComponents.RLock()
+	defer msc.mutStateComponents.RUnlock()
+
+	if msc.stateComponents == nil {
+		return nil
+	}
+
+	return msc.stateComponents.accountsAdapterAPIFactory
+}
+
+// PeerAccountsAdapterAPIFactory returns the peer accounts adapter api factory
+func (msc *managedStateComponents) PeerAccountsAdapterAPIFactory() AccountsAdapterAPIFactory {
+	msc.mutStateComponents.RLock()
+	defer msc.mutStateComponents.RUnlock()
+
+	if msc.stateComponents == nil {
+		return nil
+	}
+
+	return msc.stateComponents.peerAccountsAdapterAPIFactory
 }
 
 // AccountsAdapterAPI returns the accounts adapter for the user accounts to be used in REST API

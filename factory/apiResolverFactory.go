@@ -239,10 +239,15 @@ func createScQueryElement(
 	var vmFactory process.VirtualMachinesContainerFactory
 	var err error
 
+	accountsAdapterAPI, err := args.stateComponents.AccountsAdapterAPIFactory().Create()
+	if err != nil {
+		return nil, err
+	}
+
 	builtInFuncs, nftStorageHandler, err := createBuiltinFuncs(
 		args.gasScheduleNotifier,
 		args.coreComponents.InternalMarshalizer(),
-		args.stateComponents.AccountsAdapter(),
+		accountsAdapterAPI,
 		args.processComponents.ShardCoordinator(),
 		args.coreComponents.EpochNotifier(),
 		args.epochConfig.EnableEpochs.ESDTMultiTransferEnableEpoch,
@@ -265,7 +270,7 @@ func createScQueryElement(
 	scStorage := args.generalConfig.SmartContractsStorageForSCQuery
 	scStorage.DB.FilePath += fmt.Sprintf("%d", args.index)
 	argsHook := hooks.ArgBlockChainHook{
-		Accounts:           args.stateComponents.AccountsAdapter(),
+		Accounts:           accountsAdapterAPI,
 		PubkeyConv:         args.coreComponents.AddressPubKeyConverter(),
 		StorageService:     args.dataComponents.StorageService(),
 		BlockChain:         args.dataComponents.Blockchain(),
@@ -284,6 +289,11 @@ func createScQueryElement(
 	}
 
 	if args.processComponents.ShardCoordinator().SelfId() == core.MetachainShardId {
+		peerAccounts, err := args.stateComponents.PeerAccountsAdapterAPIFactory().Create()
+		if err != nil {
+			return nil, err
+		}
+
 		argsNewVmFactory := metachain.ArgsNewVMContainerFactory{
 			ArgBlockChainHook:   argsHook,
 			Economics:           args.coreComponents.EconomicsData(),
@@ -293,7 +303,7 @@ func createScQueryElement(
 			Hasher:              args.coreComponents.Hasher(),
 			Marshalizer:         args.coreComponents.InternalMarshalizer(),
 			SystemSCConfig:      args.systemSCConfig,
-			ValidatorAccountsDB: args.stateComponents.PeerAccounts(),
+			ValidatorAccountsDB: peerAccounts,
 			ChanceComputer:      args.coreComponents.Rater(),
 			EpochNotifier:       args.coreComponents.EpochNotifier(),
 			EpochConfig:         args.epochConfig,
