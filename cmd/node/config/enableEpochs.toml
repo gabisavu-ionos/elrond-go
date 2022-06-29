@@ -222,5 +222,5 @@
     # GasScheduleByEpochs holds the configuration for the gas schedule that will be applied from specific epochs
     GasScheduleByEpochs = [
         { StartEpoch = 0, FileName = "gasScheduleV1.toml" },
-        { StartEpoch = 1, FileName = "gasScheduleV6.toml" },
+        { StartEpoch = 99999, FileName = "gasScheduleV6.toml" },
     ]
