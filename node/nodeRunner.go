@@ -455,8 +455,10 @@ func (nr *nodeRunner) executeOneComponentCreationCycle(
 		configs.ImportDbConfig.IsImportDBMode,
 	)
 	if err != nil {
+		log.Debug("REMOVE_ME error while creating the node structure", "error", err)
 		return true, err
 	}
+	log.Debug("REMOVE_ME successfully created the node structure")
 
 	if managedBootstrapComponents.ShardCoordinator().SelfId() == core.MetachainShardId {
 		log.Debug("activating nodesCoord's validators indexing")
@@ -465,10 +467,14 @@ func (nr *nodeRunner) executeOneComponentCreationCycle(
 			nodesCoord,
 			managedProcessComponents.EpochStartTrigger().Epoch(),
 		)
+	} else {
+		log.Debug("REMOVE_ME do not activate validators indexing")
 	}
 
+	log.Debug("REMOVE_ME creating the channel fro vm query allowance")
 	// this channel will trigger the moment when the sc query service should be able to process VM Query requests
 	allowExternalVMQueriesChan := make(chan struct{})
+	log.Debug("REMOVE_ME created the channel fro vm query allowance")
 
 	log.Debug("updating the API service after creating the node facade")
 	ef, err := nr.createApiFacade(currentNode, webServerHandler, gasScheduleNotifier, allowExternalVMQueriesChan)
@@ -482,6 +488,7 @@ func (nr *nodeRunner) executeOneComponentCreationCycle(
 	go func(statusHandler core.AppStatusHandler) {
 		time.Sleep(delayBeforeScQueriesStart)
 		close(allowExternalVMQueriesChan)
+		log.Debug("VMQuery ready: true")
 		statusHandler.SetStringValue(common.MetricAreVMQueriesReady, strconv.FormatBool(true))
 	}(managedCoreComponents.StatusHandler())
 

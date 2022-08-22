@@ -51,29 +51,46 @@ func CreateNode(
 	bootstrapRoundIndex uint64,
 	isInImportMode bool,
 ) (*Node, error) {
+	defer func() {
+		log.Debug("REMOVE_ME CreateNode defer")
+	}()
+	log.Debug("REMOVE_ME start prepareOpenTopics")
 	prepareOpenTopics(networkComponents.InputAntiFloodHandler(), processComponents.ShardCoordinator())
+	log.Debug("REMOVE_ME finish prepareOpenTopics")
 
+	log.Debug("REMOVE_ME start peerDenialEvaluator")
 	peerDenialEvaluator, err := blackList.NewPeerDenialEvaluator(
 		networkComponents.PeerBlackListHandler(),
 		networkComponents.PubKeyCacher(),
 		processComponents.PeerShardMapper(),
 	)
 	if err != nil {
+		log.Debug("REMOVE_ME finish with error peerDenialEvaluator", "error", err)
 		return nil, err
 	}
+	log.Debug("REMOVE_ME finish peerDenialEvaluator")
 
+	log.Debug("REMOVE_ME start SetPeerDenialEvaluator")
 	err = networkComponents.NetworkMessenger().SetPeerDenialEvaluator(peerDenialEvaluator)
 	if err != nil {
+		log.Debug("REMOVE_ME finish with error SetPeerDenialEvaluator", "error", err)
 		return nil, err
 	}
+	log.Debug("REMOVE_ME finish SetPeerDenialEvaluator")
 
+	log.Debug("REMOVE_ME start genesisTime")
 	genesisTime := time.Unix(coreComponents.GenesisNodesSetup().GetStartTime(), 0)
+	log.Debug("REMOVE_ME finish genesisTime")
 
+	log.Debug("REMOVE_ME start ConsensusGroupSize")
 	consensusGroupSize, err := consensusComponents.ConsensusGroupSize()
 	if err != nil {
+		log.Debug("REMOVE_ME finish with error ConsensusGroupSize", "error", err)
 		return nil, err
 	}
+	log.Debug("REMOVE_ME finish ConsensusGroupSize")
 
+	log.Debug("REMOVE_ME start NewESDTDataStorage")
 	esdtNftStorage, err := builtInFunctions.NewESDTDataStorage(builtInFunctions.ArgsNewESDTDataStorage{
 		Accounts:                stateComponents.AccountsAdapterAPI(),
 		GlobalSettingsHandler:   nodeDisabled.NewDisabledGlobalSettingHandler(),
@@ -83,10 +100,13 @@ func CreateNode(
 		ShardCoordinator:        processComponents.ShardCoordinator(),
 	})
 	if err != nil {
+		log.Debug("REMOVE_ME finish with error NewESDTDataStorage", "error", err)
 		return nil, err
 	}
+	log.Debug("REMOVE_ME finish NewESDTDataStorage")
 
 	var nd *Node
+	log.Debug("REMOVE_ME start NewNode")
 	nd, err = NewNode(
 		WithCoreComponents(coreComponents),
 		WithCryptoComponents(cryptoComponents),
@@ -115,16 +135,22 @@ func CreateNode(
 		WithESDTNFTStorageHandler(esdtNftStorage),
 	)
 	if err != nil {
+		log.Debug("REMOVE_ME finish with error NewNode", "error", err)
 		return nil, errors.New("error creating node: " + err.Error())
 	}
+	log.Debug("REMOVE_ME finish NewNode")
 
 	if processComponents.ShardCoordinator().SelfId() < processComponents.ShardCoordinator().NumberOfShards() {
+		log.Debug("REMOVE_ME start CreateShardedStores")
 		err = nd.CreateShardedStores()
 		if err != nil {
+			log.Debug("REMOVE_ME finish with error CreateShardedStores", "error", err)
 			return nil, err
 		}
+		log.Debug("REMOVE_ME finish CreateShardedStores")
 	}
 
+	log.Debug("REMOVE_ME start CreateInterceptedDebugHandler")
 	err = nodeDebugFactory.CreateInterceptedDebugHandler(
 		nd,
 		processComponents.InterceptorsContainer(),
@@ -132,8 +158,10 @@ func CreateNode(
 		config.Debug.InterceptorResolver,
 	)
 	if err != nil {
+		log.Debug("REMOVE_ME finish with error CreateInterceptedDebugHandler", "error", err)
 		return nil, err
 	}
+	log.Debug("REMOVE_ME finish CreateInterceptedDebugHandler")
 
 	return nd, nil
 }
