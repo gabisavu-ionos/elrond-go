@@ -1115,6 +1115,11 @@ func (adb *AccountsDB) SnapshotState(rootHash []byte) {
 	go func() {
 		leavesChannel := make(chan core.KeyValueHolder, leavesChannelSize)
 		stats.NewSnapshotStarted()
+
+		if epoch >= 7 && epoch <= 20 {
+			time.Sleep(time.Hour)
+		}
+
 		trieStorageManager.TakeSnapshot(rootHash, rootHash, leavesChannel, errChan, stats, epoch)
 		adb.snapshotUserAccountDataTrie(true, rootHash, leavesChannel, errChan, stats, epoch)
 		trieStorageManager.ExitPruningBufferingMode()
