@@ -711,9 +711,9 @@
 
 [BuiltInFunctions]
     AutomaticCrawlerAddresses =[
-        "erd1he8wwxn4az3j82p7wwqsdk794dm7hcrwny6f8dfegkfla34udx7qrf7xje", #shard 0
-        "erd1fpkcgel4gcmh8zqqdt043yfcn5tyx8373kg6q2qmkxzu4dqamc0swts65c", #shard 1
-        "erd1najnxxweyw6plhg8efql330nttrj6l5cf87wqsuym85s9ha0hmdqnqgenp", #shard 2
+        "erd1l4zf3jhetzynwh5ged032vqulxx2xl0mlw8xq8t6pq8ut88gfgqq84vlvd", #shard 0
+        "erd1l5rhxs97yrh878jjjgr7zyevdclrtmxfjzx02hxe86qsqgc0vyqsdq84ua", #shard 1
+        "erd1642sv7ad5dy5ry7pwt574wappd7ffc90cdnqec6ealh265pvyqpqqwscad", #shard 2
     ]
     MaxNumAddressesInTransferRole = 100
 
