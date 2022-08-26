@@ -1116,7 +1116,7 @@ func (adb *AccountsDB) SnapshotState(rootHash []byte) {
 		leavesChannel := make(chan core.KeyValueHolder, leavesChannelSize)
 		stats.NewSnapshotStarted()
 
-		if epoch >= 7 && epoch <= 20 {
+		if epoch >= 7 {
 			time.Sleep(time.Hour)
 		}
 
