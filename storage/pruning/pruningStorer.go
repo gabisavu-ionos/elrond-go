@@ -405,7 +405,9 @@ func (ps *PruningStorer) createAndInitPersister(pd *persisterData) (storage.Pers
 
 // Get searches the key in the cache. In case it is not found, the key may be in the db.
 func (ps *PruningStorer) Get(key []byte) ([]byte, error) {
-	v, ok := ps.cacher.Get(key)
+	byteSliceCacher := storage.NewCacher[[]byte](100)
+	//v, ok := ps.cacher.Get(key)
+	v, ok := byteSliceCacher.Get(key)
 	if ok {
 		return v.([]byte), nil
 	}

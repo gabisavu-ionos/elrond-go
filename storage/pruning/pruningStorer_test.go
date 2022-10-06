@@ -115,6 +115,19 @@ func getDefaultArgsSerialDB() *pruning.StorerArgs {
 	}
 }
 
+func BenchmarkPruningStorerGet(b *testing.B) {
+	// am folosit ce erea la inceput in TestPruningStorer_PutAndGetShouldWork
+	args := getDefaultArgs()
+	ps, _ := pruning.NewPruningStorer(args)
+
+	testKey, testVal := []byte("key"), []byte("value")
+	_ = ps.Put(testKey, testVal)
+
+	for i := 0; i < b.N; i++ {
+		_, _ = ps.Get(testKey)
+	}
+}
+
 func TestNewPruningStorer_InvalidNumberOfActivePersistersShouldErr(t *testing.T) {
 	t.Parallel()
 

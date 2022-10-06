@@ -45,6 +45,38 @@ type Batcher interface {
 	IsInterfaceNil() bool
 }
 
+//type AllowedValueTypes[T block.MiniBlock | []byte] struct { // todo in loc de int | []byte, poate sa fie allowedTypes
+//	Value T
+//}
+
+type AllowedTypes interface {
+	any //[]byte | block.MiniBlock
+
+}
+
+type GenericCacher[V any] struct {
+	size  int
+	items map[string]V
+}
+
+func NewCacher[V any](size int) *GenericCacher[V] {
+	return &GenericCacher[V]{
+		items: make(map[string]V),
+		size:  size,
+	}
+}
+
+func (c *GenericCacher[V]) Add(key []byte, value V) {
+	c.items[string(key)] = value
+}
+func (c *GenericCacher[V]) Get(key []byte) (value interface{}, ok bool) {
+	item := c.items[string(key)]
+	//if item != nil {
+	return item, true
+	//}
+	//return nil, false
+}
+
 // Cacher provides caching services
 type Cacher interface {
 	// Clear is used to completely clear the cache.
@@ -53,6 +85,8 @@ type Cacher interface {
 	Put(key []byte, value interface{}, sizeInBytes int) (evicted bool)
 	// Get looks up a key's value from the cache.
 	Get(key []byte) (value interface{}, ok bool)
+	//Get(key []byte) (value AllowedValueTypes[[]byte], ok bool) // todo ar trebui sa vad ce tipuri poate avea value si sa le pun in KeyValue
+	//Get(key []byte) (value AllowedTypes, ok bool) // todo ar trebui sa vad ce tuipuri poate avea value si sa le pun in KeyValue
 	// Has checks if a key is in the cache, without updating the
 	// recent-ness or deleting it for being stale.
 	Has(key []byte) bool
